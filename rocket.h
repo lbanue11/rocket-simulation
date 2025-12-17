@@ -8,7 +8,6 @@
 
 
 class Rocket {
-
 private:
     const double gravity = 9.81;
     double mass;
@@ -16,6 +15,8 @@ private:
     double velocity = 0.0; // Current velocity of the rocket
     double dragCoefficient = 50.0; // Example drag coefficient
     double altitude = 0.0; // Current altitude of the rocket
+    double altimeterReading = 0.0; // Altimeter reading with noise and bias
+    double accelerometerReading = 0.0; // Accelerometer reading with noise and bias
 
 
 public:
@@ -55,7 +56,40 @@ public:
         return altitude;
     }
 
+    double altimeterSensor(const int step) {
 
+        if (step % 5 == 0) {
+
+            // Simulated noise between ±0.2
+            const double noise = static_cast<double>(rand()) / RAND_MAX * 0.4 - 0.2;
+            const double bias = 0.5; // Simulated bias
+
+            altimeterReading = altitude + noise + bias;
+            return altimeterReading;
+
+        } else {
+            // Return the last altimeter reading without updating
+            return altimeterReading;
+        }
+
+    }
+
+    double accelerometerSensor(const int step) {
+
+        // Return acceleration every step (can be changed as needed)
+        if (step % 1 == 0) {
+
+            const double noise = static_cast<double>(rand()) / RAND_MAX * 0.1 - 0.05;
+            const double bias = 0.1; // Simulated bias
+
+            accelerometerReading = acceleration() + noise + bias;
+            return accelerometerReading;
+        }
+        else {
+            return accelerometerReading;
+        }
+
+    }
 };
 
 #endif
